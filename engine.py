@@ -46,7 +46,7 @@ StepCounter = 0
 # Start main loop
 while True:
  
-  prin(StepCounter)
+  print(StepCounter)
   print(Seq[StepCounter])
  
   for pin in range(0, 4):
