@@ -35,6 +35,8 @@ time.sleep(0.1)
 for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=True):
 	# grab the raw NumPy array representing the image, then initialize the timestamp
 	# and occupied/unoccupied text
+	rawCapture.truncate()
+	rawCapture.seek(0)
 	frame = frame.array
  
 	# show the frame
@@ -110,7 +112,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 				direction = dirX if dirX != "" else dirY
 		# otherwise, compute the thickness of the line and
 		# draw the connecting lines
-		thickness = int(np.sqrt(args["buffer"] / float(i + 1)) * 2.5)
+		thickness = int(np.sqrt(32.0 / float(i + 1)) * 2.5)
 		cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
  
 	# show the movement deltas and the direction of movement on
