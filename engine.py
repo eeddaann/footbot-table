@@ -15,7 +15,7 @@ StepPins = [17,18,21,22]
  
 # Set all pins as output
 for pin in StepPins:
-  print "Setup pins"
+  print("Setup pins")
   GPIO.setup(pin,GPIO.OUT)
   GPIO.output(pin, False)
  
