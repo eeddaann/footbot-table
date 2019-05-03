@@ -30,7 +30,7 @@ StepCount = len(Seq)
 StepDir = 1 # Set to 1 or 2 for clockwise
             # Set to -1 or -2 for anti-clockwise
  
-WaitTime = 1/float(10000)
+WaitTime = 10/float(100)
  
 # Initialise variables
 StepCounter = 0
@@ -44,7 +44,7 @@ while True:
   for pin in range(0, 4):
     xpin = StepPins[pin]
     if Seq[StepCounter][pin]!=0:
-      print(" Enable GPIO %i" %(xpin))
+      # print(" Enable GPIO %i" %(xpin))
       GPIO.output(xpin, True)
     else:
       GPIO.output(xpin, False)
