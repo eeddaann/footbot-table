@@ -11,7 +11,7 @@ GPIO.setmode(GPIO.BCM)
 # Define GPIO signals to use
 # Physical pins 11,15,16,18
 # GPIO17,GPIO22,GPIO23,GPIO24
-StepPins = [4,17,23,24]
+StepPins = [17,22,23,24]
  
 # Set all pins as output
 for pin in StepPins:
@@ -21,15 +21,11 @@ for pin in StepPins:
  
 # Define advanced sequence
 # as shown in manufacturers datasheet
-Seq = [[0,1,0,0],
-       [0,1,0,1],
-       [0,0,0,1],
-       [1,0,0,1],
-       [1,0,0,0],
-       [1,0,1,0],
-       [0,0,1,0],
-       [0,1,1,0]]
-        
+Seq = [[1,1,0,0],
+       [0,1,1,0],
+       [0,0,1,1],
+       [1,0,0,1]]
+
 StepCount = len(Seq)
 StepDir = 1 # Set to 1 or 2 for clockwise
             # Set to -1 or -2 for anti-clockwise
