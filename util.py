@@ -10,6 +10,8 @@ import numpy as np
 import argparse
 import time
 
+headless = True
+
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space
 greenLower = (29, 86, 6)
@@ -113,19 +115,22 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		# otherwise, compute the thickness of the line and
 		# draw the connecting lines
 		thickness = int(np.sqrt(32.0 / float(i + 1)) * 2.5)
-		cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
- 
+		if not headless:
+			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
+	if headless:
+		print("dx: {}, dy: {}".format(dX, dY))
 	# show the movement deltas and the direction of movement on
 	# the frame
-	cv2.putText(frame, direction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
-		0.65, (0, 0, 255), 3)
-	cv2.putText(frame, "dx: {}, dy: {}".format(dX, dY),
-		(10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
-		0.35, (0, 0, 255), 1)
- 
-	# show the frame to our screen and increment the frame counter
-	cv2.imshow("Frame", frame)
-	key = cv2.waitKey(1) & 0xFF
+	else:
+		cv2.putText(frame, direction, (10, 30), cv2.FONT_HERSHEY_SIMPLEX,
+			0.65, (0, 0, 255), 3)
+		cv2.putText(frame, "dx: {}, dy: {}".format(dX, dY),
+			(10, frame.shape[0] - 10), cv2.FONT_HERSHEY_SIMPLEX,
+			0.35, (0, 0, 255), 1)
+	
+		# show the frame to our screen and increment the frame counter
+		cv2.imshow("Frame", frame)
+		key = cv2.waitKey(1) & 0xFF
 	counter += 1
  
 	# if the 'q' key is pressed, stop the loop
