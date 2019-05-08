@@ -134,8 +134,9 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	counter += 1
  
 	# if the 'q' key is pressed, stop the loop
-	if key == ord("q"):
-		break
+	if not headless: 
+		if key == ord("q"):
+			break
  
 # close all windows
 cv2.destroyAllWindows()
