@@ -118,7 +118,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		if not headless:
 			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 	if headless:
-		print("dx: {}, dy: {}".format(dX, dY))
+		print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
 	# show the movement deltas and the direction of movement on
 	# the frame
 	else:
