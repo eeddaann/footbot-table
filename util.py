@@ -9,9 +9,20 @@ from imutils.video import VideoStream
 import numpy as np
 import argparse
 import time
-
+from time import sleep
+from gpiozero import Servo
 headless = True
-
+RATIO = 1.5000000000000002 
+def block():
+    s = Servo(14)
+    s.mid()
+    sleep(0.1)
+    s.min()
+    sleep(0.1*RATIO)
+    s.value = None
+def apply_logic(x,y):
+    if x>200:
+        block()
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space
 greenLower = (29, 86, 6)
@@ -23,7 +34,7 @@ pts = deque(maxlen=32)
 counter = 0
 (dX, dY) = (0, 0)
 direction = ""
- 
+x,y = 0,0 
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
@@ -87,7 +98,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
  
 		# check to see if enough points have been accumulated in
 		# the buffer
-		if counter >= 10 and i == 1 and pts[-10] is not None:
+		if counter >= 10 and i == 1 and len(pts)>=10 and pts[-10] is not None:
 			# compute the difference between the x and y
 			# coordinates and re-initialize the direction
 			# text variables
@@ -118,7 +129,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		if not headless:
 			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 	if headless:
-		print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
+                print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
+                apply_logic(x,y)
 	# show the movement deltas and the direction of movement on
 	# the frame
 	else:
