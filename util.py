@@ -11,7 +11,7 @@ import argparse
 import time
 from time import sleep
 from gpiozero import Servo
-headless = True
+headless = False
 RATIO = 1.5000000000000002 
 def block():
     s = Servo(14)
@@ -25,9 +25,10 @@ def apply_logic(x,y):
         block()
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space
-greenLower = (29, 86, 6)
-greenUpper = (64, 255, 255)
- 
+#greenLower = (29, 86, 6)
+#greenUpper = (64, 255, 255)
+greenLower = (20,100,100)
+greenUpper = (30,255,255)
 # initialize the list of tracked points, the frame counter,
 # and the coordinate deltas
 pts = deque(maxlen=32)
@@ -55,6 +56,10 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 	# show the frame
 	#cv2.imshow("Frame", image)
 	frame = imutils.resize(frame, width=600)
+	frame = frame[100: ,90:-60]
+	#frame[:,:,1]=0
+	#frame[:,:,2]=0
+	#frame *= (frame>170 & frame <210)
 	blurred = cv2.GaussianBlur(frame, (11, 11), 0)
 	hsv = cv2.cvtColor(blurred, cv2.COLOR_BGR2HSV)
  
