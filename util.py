@@ -12,10 +12,14 @@ import time
 from time import sleep
 from gpiozero import Servo
 from prometheus_client import start_http_server, Gauge
-headless = False
+headless = True
 RATIO = 1.5000000000000002 
 x_g = Gauge('x_pos','xpos')
+dx_g = Gauge('dx','dx')
 y_g = Gauge('y_pos','ypos')
+dy_g = Gauge('dy','dy')
+radius_g = Gauge('radius','radius')
+cnts_g = Gauge('cnts','cnts')
 start_http_server(8000)
 def block():
     s = Servo(14)
@@ -39,7 +43,7 @@ pts = deque(maxlen=32)
 counter = 0
 (dX, dY) = (0, 0)
 direction = ""
-x,y = 0,0 
+x,y,dx,dy = 0,0,0,0
 # initialize the camera and grab a reference to the raw camera capture
 camera = PiCamera()
 camera.resolution = (640, 480)
@@ -80,6 +84,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		cv2.CHAIN_APPROX_SIMPLE)
 	cnts = imutils.grab_contours(cnts)
 	center = None
+	cnts_g.set(len(cnts))
 	# only proceed if at least one contour was found
 	if len(cnts) > 0:
 		# find the largest contour in the mask, then use
@@ -92,6 +97,7 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
  
 		# only proceed if the radius meets a minimum size
 		if radius > 10:
+			radius_g.set(radius)
 			# draw the circle and centroid on the frame,
 			# then update the list of tracked points
 			cv2.circle(frame, (int(x), int(y)), int(radius),
@@ -138,9 +144,11 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		if not headless:
 			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
 	x_g.set(x)
+	dx_g.set(dx)
 	y_g.set(y)
+	dy_g.set(dy)
 	if headless:
-                print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
+                #print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
                 apply_logic(x,y)
 	# show the movement deltas and the direction of movement on
 	# the frame
