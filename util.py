@@ -11,8 +11,12 @@ import argparse
 import time
 from time import sleep
 from gpiozero import Servo
+from prometheus_client import start_http_server, Gauge
 headless = False
 RATIO = 1.5000000000000002 
+x_g = Gauge('x_pos','xpos')
+y_g = Gauge('y_pos','ypos')
+start_http_server(8000)
 def block():
     s = Servo(14)
     s.mid()
@@ -133,6 +137,8 @@ for frame in camera.capture_continuous(rawCapture, format="bgr", use_video_port=
 		thickness = int(np.sqrt(32.0 / float(i + 1)) * 2.5)
 		if not headless:
 			cv2.line(frame, pts[i - 1], pts[i], (0, 0, 255), thickness)
+	x_g.set(x)
+	y_g.set(y)
 	if headless:
                 print("x: {}, y: {}, dx: {}, dy: {}".format(x, y, dX, dY))
                 apply_logic(x,y)
