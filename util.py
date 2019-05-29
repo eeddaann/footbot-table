@@ -10,7 +10,7 @@ import numpy as np
 import argparse
 import time
 from time import sleep
-from gpiozero import Servo
+from gpiozero import Servo, LED
 from prometheus_client import start_http_server, Gauge
 headless = True
 RATIO = 1.5000000000000002 
@@ -21,16 +21,33 @@ dy_g = Gauge('dy','dy')
 radius_g = Gauge('radius','radius')
 cnts_g = Gauge('cnts','cnts')
 start_http_server(8000)
-def block():
-    s = Servo(14)
-    s.mid()
-    sleep(0.1)
+def kick(d):
+    print('kick')
+    l1=LED(15)
+    l1.on()
+    s =Servo(4)
+    s.max()
+    sleep(d)
     s.min()
-    sleep(0.1*RATIO)
+    sleep(d*RATIO)
+    l1.off()
+def block(d):
+    print('block')
+    s = Servo(14)
+    s.min()
+    sleep(d)
+    l2=LED(18)
+    l2.on()
+    sleep(d)
+    l2.off()
+    s.max()
+    sleep(d)
     s.value = None
 def apply_logic(x,y):
     if x>200:
-        block()
+        block(0.3)
+    else:
+        kick(0.4)
 # define the lower and upper boundaries of the "green"
 # ball in the HSV color space
 #greenLower = (29, 86, 6)
